@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
        User savedCustomer =  userRepository.save(user);
         return savedCustomer.getId() != null;
     }
-    public List<User> getAllProducts() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 

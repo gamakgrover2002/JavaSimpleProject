@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,8 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-
+   @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
         User newUser = userService.RegisterDTOToUser(registerDTO);
@@ -38,15 +40,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDTO logindto){
-        System.out.println(logindto);
 
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(logindto.getUserName(), logindto.getUserName());
-        System.out.println(token);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(logindto.getUserName(), logindto.getPassword());
+
        Authentication auth =  authenticationManager.authenticate(token);
-       System.out.println("Authitication completed");
-        System.out.println(auth);
+
        boolean status = auth.isAuthenticated();
-       System.out.println(status);
+
        if(status){
            return new ResponseEntity<>("Ok",HttpStatus.OK);
        }
@@ -55,6 +55,6 @@ public class UserController {
     }
     @GetMapping
     public List<User> getAllProducts() {
-        return userService.getAllProducts();
+        return userService.getAllUsers();
     }
 }
