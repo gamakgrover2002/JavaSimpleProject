@@ -4,6 +4,7 @@ package com.example.JavaProject.Controller;
 import com.example.JavaProject.DTO.Response.LoginDTO;
 import com.example.JavaProject.DTO.Response.RegisterDTO;
 import com.example.JavaProject.Entity.User;
+import com.example.JavaProject.Service.JwtService;
 import com.example.JavaProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 
@@ -26,6 +28,9 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    JwtService jwt;
+
    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostMapping("/register")
@@ -33,7 +38,9 @@ public class UserController {
         User newUser = userService.RegisterDTOToUser(registerDTO);
        boolean status =  userService.saveCostumer(newUser);
         if(status){
-            return new ResponseEntity<>("Success", HttpStatus.CREATED);
+           String token = jwt.generateToken(registerDTO.getUserName());
+           System.out.println(token);
+            return new ResponseEntity<>(Map.of("message", "Success", "token", token), HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Failure",HttpStatus.INTERNAL_SERVER_ERROR);
     }
