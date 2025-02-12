@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@RestController
 
+@RestController
 public class UserController {
 
     @Autowired
-    private  UserService userService;
+    private UserService userService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -31,35 +31,37 @@ public class UserController {
     @Autowired
     JwtService jwt;
 
-   @Autowired
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO) {
         User newUser = userService.RegisterDTOToUser(registerDTO);
-       boolean status =  userService.saveCostumer(newUser);
-        if(status){
-           String token = jwt.generateToken(registerDTO.getUserName());
-           System.out.println(token);
-            return new ResponseEntity<>(Map.of("message", "Success", "token", token), HttpStatus.CREATED);
+        boolean status = userService.saveCostumer(newUser);
+        if (status) {
+
+            return new ResponseEntity<>("Registered Successfully", HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("Failure",HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Failure", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginDTO logindto){
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(logindto.getUserName(), logindto.getPassword());
-
-       Authentication auth =  authenticationManager.authenticate(token);
-
-       boolean status = auth.isAuthenticated();
-
-       if(status){
-           return new ResponseEntity<>("Ok",HttpStatus.OK);
-       }
-       return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
-
+    public ResponseEntity<?> loginUser(@RequestBody LoginDTO logindto) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(logindto.getUserName(), logindto.getPassword());
+        Authentication auth = authenticationManager.authenticate(authToken);
+        boolean status = auth.isAuthenticated();
+        if (status) {
+            return new ResponseEntity<>("Welcome User",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        System.out.println("Logout");
+        return new ResponseEntity<>("Logged out successfully", HttpStatus.OK);
+    }
+
     @GetMapping
     public List<User> getAllProducts() {
         return userService.getAllUsers();

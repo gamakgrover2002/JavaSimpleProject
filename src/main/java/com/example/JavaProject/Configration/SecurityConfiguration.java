@@ -1,6 +1,5 @@
 package com.example.JavaProject.Configration;
 
-
 import com.example.JavaProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +29,9 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF (make sure it's disabled only if you're not using CSRF protection)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll()  // Permit login and register
-                        .requestMatchers("/api/v1/products/**").permitAll()  // Permit all requests to /api/v1/products
-                        .anyRequest().authenticated()  // Other requests require authentication
+                        .requestMatchers("/login", "/register", "/logout").permitAll()
+                        .requestMatchers("/api/v1/products/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .authenticationProvider(authProvider())
                 .formLogin(form -> form.disable()); // Disable default form login
@@ -52,7 +51,4 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
-
-
 }
