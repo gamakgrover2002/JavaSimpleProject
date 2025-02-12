@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfigration {
+public class SecurityConfiguration {
 
     @Autowired
     private UserService userService;
@@ -49,7 +49,6 @@ public class SecurityConfigration {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        System.out.println(authConfig.getAuthenticationManager());
         return authConfig.getAuthenticationManager();
     }
 

@@ -1,6 +1,6 @@
 package com.example.JavaProject.Service;
 
-import com.example.JavaProject.Entity.Product;
+import com.example.JavaProject.DTO.Response.RegisterDTO;
 import com.example.JavaProject.Entity.User;
 import com.example.JavaProject.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,4 +46,13 @@ public class UserService implements UserDetailsService {
                 .build();
 
     }
+    public User RegisterDTOToUser(RegisterDTO registerDTO){
+        User newUser = new User();
+              newUser.setUserName(registerDTO.getUserName());
+              newUser.setName(registerDTO.getUserName());
+              newUser.setPassword(registerDTO.getPassword());
+              return newUser;
+    }
+
+
 }

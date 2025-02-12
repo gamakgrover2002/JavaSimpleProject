@@ -1,6 +1,8 @@
 package com.example.JavaProject.Controller;
 
-import com.example.JavaProject.Entity.Product;
+
+import com.example.JavaProject.DTO.Response.LoginDTO;
+import com.example.JavaProject.DTO.Response.RegisterDTO;
 import com.example.JavaProject.Entity.User;
 import com.example.JavaProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +27,20 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user){
-       boolean status =  userService.saveCostumer(user);
+    public ResponseEntity<?> registerUser(@RequestBody RegisterDTO registerDTO){
+        User newUser = userService.RegisterDTOToUser(registerDTO);
+       boolean status =  userService.saveCostumer(newUser);
         if(status){
             return new ResponseEntity<>("Success", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Failure",HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user){
-        System.out.println(user);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
+    public ResponseEntity<?> loginUser(@RequestBody LoginDTO logindto){
+        System.out.println(logindto);
+
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(logindto.getUserName(), logindto.getUserName());
         System.out.println(token);
        Authentication auth =  authenticationManager.authenticate(token);
        System.out.println("Authitication completed");
